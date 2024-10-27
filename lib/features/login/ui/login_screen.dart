@@ -1,20 +1,19 @@
+import 'package:advanced_course/features/login/data/models/login_request_body.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../core/helpers/spacing.dart';
 import '../../../core/theming/styles.dart';
 import '../../../core/widgets/app_text_button.dart';
+import '../logic/cubit/login_cubit.dart';
 import 'widgets/already_have_account_text.dart';
 import 'widgets/email_and_password.dart';
+import 'widgets/login_bloc_listener.dart';
 import 'widgets/terms_and_conditions_text.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
-  @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,6 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Column(
                   children: [
                     const EmailAndPassword(),
+                    verticalSpacing(24),
                     Align(
                       alignment: AlignmentDirectional.centerEnd,
                       child: Text(
@@ -49,12 +49,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     AppTextButton(
                       buttonText: "Login",
                       textStyle: TextStyles.font16WhiteSemiBold,
-                      onPressed: () {},
+                      onPressed: () {
+                        validateThenDoLogin(context);
+                      },
                     ),
                     verticalSpacing(16),
                     const TermsAndConditionsText(),
                     verticalSpacing(60),
                     const AlreadyHaveAccountText(),
+                    const LoginBlocListener(),
                   ],
                 ),
               ],
@@ -63,5 +66,16 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  void validateThenDoLogin(BuildContext context) {
+    if (context.read<LoginCubit>().formKey.currentState!.validate()) {
+      context.read<LoginCubit>().emitLoginStates(
+            LoginRequestBody(
+              email: context.read<LoginCubit>().emailController.text,
+              password: context.read<LoginCubit>().passwordController.text,
+            ),
+          );
+    }
   }
 }
