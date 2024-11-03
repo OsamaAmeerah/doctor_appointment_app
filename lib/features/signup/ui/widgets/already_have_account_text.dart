@@ -1,4 +1,7 @@
+import 'package:advanced_course/core/helpers/extentions.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import '../../../../core/routing/routes.dart';
 import '../../../../core/theming/styles.dart';
 
 class AlreadyHaveAccountText extends StatelessWidget {
@@ -12,11 +15,15 @@ class AlreadyHaveAccountText extends StatelessWidget {
         children: [
           TextSpan(
             text: 'Already have an account?',
-            style: TextStyles.font14DarkBlueMedium,
+            style: TextStyles.font13DarkBlueRegular,
           ),
           TextSpan(
-            text: ' Sign Up',
+            text: ' Login',
             style: TextStyles.font13BlueSemiBold,
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                context.pushReplacementNamed(Routes.loginScreen);
+              },
           ),
         ],
       ),
